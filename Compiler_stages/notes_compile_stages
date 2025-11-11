@@ -1,0 +1,54 @@
+1.compilation stages,
+
+                 cc -E hello.c -o hello.i  
+                  cc -S hello.i -o hello.s
+                  cc -c hello.s -o hello.o
+                   cc hello.o -o output
+  and separately we can compile cc -c hello.c it will get hello .o
+example 1:: 
+cc -c main.c     # produces main.o
+cc -c add.c      # produces add.o
+cc main.o add.o -o prog
+
+example :2  cc main.c -o prog
+
+-> header files stored in /usr/include
+-> libraries stored in /lib/x86_64-linux-gnu/libc.so.6 
+
+2. who calls main :::
+
+--> the operating system (OS) doesn’t jump directly to main().
+Instead, it loads your executable into memory and starts execution at a special entry point defined by the C runtime startup code, usually called _start.
+---> > _start is provided by the C runtime library (libc) — not by your program.
+-->> _start calls   __libc_start_main(), which in turn calls your main().
+
+(( OS → _start → __libc_start_main() → main() → return → exit()  ))
+
+--> When your main() function finishes (e.g., return 0;),
+__libc_start_main() catches that return value and calls the exit() function .
+
+3.LINKER
+linker will link object files and libraries and combined into them an executable file.
+
+Static linking
+Copies required library code directly into your executable.
+cc main.c -static -o prog
+Dynamic linking
+Keeps library code in shared .so files (loaded at runtime).
+cc main.c -o prog
+
+
+4. LOADER :: The loader is part of the operating system — not part of the compiler toolchain.
+->It’s responsible for loading your program (the executable file produced by the linker) into memory and preparing it to run.
+
+Ex: ./prog
+
+
+the loader:
+    1. Reads the ELF header of prog.
+    2. Maps your program’s segments (text, data, bss) into memory.
+    3. Loads required shared libraries (e.g., libc.so.6, libm.so.6).
+    4. Performs dynamic relocation (resolving symbols between libraries).
+    5. Sets up the stack and environment.
+    6. Jumps to the program’s entry point (_start).
+So the loader executes after the linker has produced the executable.
