@@ -1,0 +1,46 @@
+Debugging
+---------
+
+Commands  | Description
+
+b -> breakpoint <function name for the breakpoint>
+s -> step in (stepping inside the function definition) 
+n -> next (next line of execution)
+
+info breakpoint -> lists the breakpoints added to the program with all sorts of information
+
+### If there are two breakpoints, they can be indexed with 1 and 2 respectively 
+delete 1 -> deletes first breakpoint
+delete 2 -> deletes second breakpoint
+record -> it can be used to record steps executed in gdb
+backtrace -> it will dump whatever is there in stack
+
+GDB Cheatsheet - > https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf
+
+### To enable gdb compile with -g option
+	gcc -g main.c -o main
+### To get gui interface for gdb 
+	gdb ./prog -tui
+
+breakpoints - Mainly works with the function calls and after "run" program execution stops at breakpoint
+watchpoints - It watches variable and keeps track if the variable value is changed
+
+
+2. C Test on operators
+
+3. static and dynamic linking
+
+steps to create archive file and statically link it to source code
+
+1. create a library and add required functions/apis
+2. convert .c file to .o file
+3. create .a file -> ar rcs libmathlib.a mathlib.o
+4. create any source file and link the library to source code
+	gcc main.c -L . -lmathlib -o main
+	gcc <source file> -L <flag for declaring the path for library location> . <current dir> -l<lib name> -o <output file name>
+
+steps to create dynamic (.so) and dynamically link it to source code
+
+1. gcc -fPIC -c mathlib.c -o mathlibd.o
+2. gcc -shared -o libmathlibd.so mathlibd.o
+3. gcc new_main_dynamic.c -L . -lmathlib -o main_dynamic
