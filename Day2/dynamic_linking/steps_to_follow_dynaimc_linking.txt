@@ -1,0 +1,21 @@
+
+1. Compile position-independent code for shared library
+gcc -fPIC -c add.c -o add.o
+
+2. Create shared library (.so)
+gcc -shared -o libmathlib.so add.o
+
+3. Compile and link the executable (links against libmathlib.so)
+gcc main.c -L. -lmathlib -o main_dynamic
+
+4.Make the loader find the .so at runtime:
+Option A (temporary for current shell):
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+
+5. Run
+./main_dynamic
+
+
+6.If both libmathlib.so and libmathlib.a are present, the linker prefers .so unless you force static with -Wl,-Bstatic/-Bdynamic or -static.
+
+

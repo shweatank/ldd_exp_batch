@@ -1,0 +1,34 @@
+GDB Debugging Steps
+1. Compile with debugging symbols:
+gcc -g main.c -o main
+
+2. Start gdb:
+gdb ./main -tui
+
+3. Run the program:
+(gdb) run
+
+4. Set breakpoints:
+(gdb) break main
+(gdb) break filename.c:line_number
+
+5. Step through code:
+(gdb) next # step over
+(gdb) step # step into
+
+6. Inspect variables:
+(gdb) print variable
+(gdb) info locals
+
+7. Backtrace:
+(gdb) bt
+
+8. Continue execution:
+(gdb) continue
+
+9. Watch variables:
+(gdb) watch variable
+
+10. Quit gdb:
+(gdb)quit.
+

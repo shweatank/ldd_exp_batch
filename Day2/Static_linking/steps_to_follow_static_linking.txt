@@ -1,0 +1,29 @@
+1. I created a main file and a custom header file that contains the prototype of the add function.
+
+2. Then I wrote add.c, which has the actual definition of the add function.
+
+3. Next, I compiled add.c into an object file using the command gcc -c add.c -o add.o
+
+4. After that, I created a static library named libmathlib.a using the command ar rcs libmathlib.a add.o
+
+5. Finally, I linked the static library with my main program using gcc main.c -L. -lmathlib -o main_static.
+
+6.If you have both:
+
+    libmathlib.a  → static library
+
+    libmathlib.so → shared/dynamic library
+
+7.GCC will ALWAYS pick the shared library (.so) first
+
+8.How to force static linking
+
+    gcc main.c -L. -lmathlib -static -o main_static
+
+| You Write   | GCC Looks For                     |
+| ----------- | --------------------------------- |
+| `-lmathlib` | `libmathlib.a` or `libmathlib.so` |
+| `-lm`       | `libm.so`                         |
+| `-lpthread` | `libpthread.so`                   |
+
+
