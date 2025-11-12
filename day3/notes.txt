@@ -1,0 +1,27 @@
+1. Memory spaces in our system
+2. processes? how to write a code? threads? how to write a code?
+3. IPC Mechanisms
+
+
+
+Ques
+
+1. How to fix an address of a variable in a program? 
+Ans - We can't do that in user space and just the embedded C or baremetal case we can fix the address of a variable
+      our c program, the variables inside it has their memory assigned in virtual address space.
+
+2. What is purpose of using const and volatile together?
+
+3. Memory
+
+4. What is PCB and explain its components?
+
+5. Why register is needed in PCB?
+
+6. Where is PCB stored in memory?
+
+7. what are IPC?
+
+8. fork and exec system
+
+9. WRT process, parent and child process has same address defined for a variable but it is virtual address and not physical address.
