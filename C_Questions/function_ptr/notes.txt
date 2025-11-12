@@ -1,0 +1,4 @@
+function pointer
+-> it is simply a pointer pointing to a function
+-> its declaration is : <return-datatype> (*<ptr_name>)(function args)
+-> 
