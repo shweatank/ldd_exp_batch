@@ -1,0 +1,19 @@
+#include <stdio.h>
+void main()
+{
+  int choice;
+  printf("1.add 2.sub\n");
+  while(1)
+ {
+   switch(choice)
+	{
+            case 1: fp=add(a,b);
+                     break;
+             case 2: fp = sub(a,b);
+                     break;
+             default : printf("enter valid choice\n");
+                       break;
+	
+	}
+  }
+}
