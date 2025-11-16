@@ -15,9 +15,9 @@ write a program where use signal to trigger parent process to copy data using ( 
 #include <errno.h>
 #include <stdlib.h>
 
-int sig_int = 0;
-int sig_term = 0;
-int sig_tstp = 0;
+volatile int sig_usr1 = 0;
+volatile int sig_usr2 = 0;
+volatile int sig_term = 0;
 
 typedef struct text {
 	int a;
@@ -31,9 +31,9 @@ struct msgbuf {
 };
 
 void sig_handle(int signum) {
-	if(signum == SIGINT) sig_int = 1;
+	if(signum == SIGUSR1) sig_usr1 = 1;
+	else if(signum == SIGUSR2) sig_usr2 = 1;
 	else if(signum == SIGTERM) sig_term = 1;
-	else if(signum == SIGTSTP) sig_tstp = 1;
 }
 
 int main() {
@@ -41,9 +41,9 @@ int main() {
 	pid_t my_id = getpid();
 	printf("Parent pid: %d\n", my_id);
 
-	signal(SIGINT, sig_handle);
+	signal(SIGUSR1, sig_handle);
+	signal(SIGUSR2, sig_handle);
 	signal(SIGTERM, sig_handle);
-	signal(SIGTSTP, sig_handle);
 
 	pid_t pid = fork();
 	printf("Child pid: %d\n", pid);
@@ -58,14 +58,13 @@ int main() {
 		key_t key;
 		int msgid;
 
-		//key = ftok("file.c", 65);
-		key = 20;
-		msgid = msgget(key, 0666);
+		key = ftok("msgq.txt", 20);
+		msgid = msgget(key, 0666 | IPC_CREAT);
 		printf("Child msg ID : %d\n", msgid);
 		//child that process input
 		while(1) {
-			if(sig_int) {		//parent sent the data process it.
-				int ret = msgrcv(msgid, &rcv_msg, sizeof(rcv_msg), 1, 0);
+			if(sig_usr1) {		//parent sent the data process it.
+				int ret = msgrcv(msgid, &rcv_msg, sizeof(Text_t), 1, 0);
 				printf("Received %d %c %d = ....\n", rcv_msg.text.a, rcv_msg.text.op, rcv_msg.text.b);
 				snd_msg.text.a = 0;
 				if(ret) {
@@ -84,20 +83,19 @@ int main() {
 						break;
 				}
 				snd_msg.mtype = 2;
-				ret = msgsnd(msgid, &snd_msg, sizeof(snd_msg), 0);
+				ret = msgsnd(msgid, &snd_msg, sizeof(Text_t), 0);
 				if (ret == 0) {
 					printf("Result sent to parent\n");
-					if (kill(my_id, SIGTSTP) != -1) {
+					if (kill(my_id, SIGUSR2) != -1) {
 						printf("Signal sent to parent\n");
 					}
 				}		
 				}
-				sig_int = 0;
+				sig_usr1 = 0;
 			}
 			if(sig_term) {
-				msgctl(msgid, IPC_RMID, NULL);
 				printf("Child exiting.....\n");
-				exit(1);
+				return EXIT_SUCCESS;
 			}
 		}
 	}
@@ -108,43 +106,42 @@ int main() {
 		key_t key;
 		int msgid;
 
-		//key = ftok("file.c", 65);
-		key = 20;
+		key = ftok("msgq.txt", 20);
 		msgid = msgget(key, 0666 | IPC_CREAT);
 		printf("Parent msg ID : %d\n", msgid);
 		snd_msg.mtype = 1;
 
 		//parent that takes input and send to child to process and receives result back
 		while(1) {
-			if (sig_int) {		//parent triggered to take input
+			if (sig_usr1) {		//parent triggered to take input
 				printf("Enter two numbers: ");
 				scanf("%d %d", &snd_msg.text.a, &snd_msg.text.b);
 				printf("Enter the operator +-*/ : ");
 				getchar();
 				scanf("%c", &snd_msg.text.op);
-				int ret = msgsnd(msgid, &snd_msg, sizeof(snd_msg), 0);
+				int ret = msgsnd(msgid, &snd_msg, sizeof(Text_t), 0);
 				if(ret == 0) {
 					printf("Message sent Successfully\n");
 					printf("Signaling child to process input.....\n");
-					if(kill(pid, SIGINT) != -1) {
+					if(kill(pid, SIGUSR1) != -1) {
 						printf("Data sent to child\n");
 					}
 				}
-				sig_int = 0;
+				sig_usr1 = 0;
 			}
-			if(sig_tstp) {		//child sent the result print it
-				int ret = msgrcv(msgid, &rcv_msg, sizeof(rcv_msg), 2, 0);
+			if(sig_usr2) {		//child sent the result print it
+				int ret = msgrcv(msgid, &rcv_msg, sizeof(Text_t), 2, 0);
 				if(ret) {
 					printf("Result = %d\n", rcv_msg.text.a);
 				}
-				sig_tstp = 0;
+				sig_usr2 = 0;
 			}
 			if(sig_term) {
 				printf("Parent waiting for child to complete....\n");
 				wait(NULL);
 				msgctl(msgid, IPC_RMID, NULL);
 				printf("Child exited. Parent exiting.....\n");
-				exit(1);
+				return EXIT_SUCCESS;
 			}
 		}
 
