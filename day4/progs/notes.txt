@@ -1,0 +1,8 @@
+We discussed the TWO more IPC methods 
+1. pipes 
+2. signals
+
+Then program related to pipes and signals
+
+3. Threads & challenges faced in threads.
+
