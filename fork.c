@@ -9,6 +9,7 @@ int main()
     printf("Parent process started. PID = %d\n", getpid());
     
     pid = fork();
+    printf("pid: %d\n",pid);
     
     if (pid < 0)
     {
