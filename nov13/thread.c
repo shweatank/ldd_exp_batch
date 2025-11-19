@@ -18,12 +18,12 @@ void main()
   /* create independent thread each of which will execute function*/
   
    iret1 = pthread_create( &thread1,NULL,print_message_function, (void*) message1);
-   iret2 = pthread_create( &thread1,NULL,print_message_function, (void*) message2);
-   iret3 = pthread_create( &thread1,NULL,print_message_function, (void*) message3);
+   iret2 = pthread_create( &thread2,NULL,print_message_function, (void*) message2);
+   iret3 = pthread_create( &thread3,NULL,print_message_function, (void*) message3);
    
    pthread_join(thread1, NULL);
-   pthread_join(thread1, NULL);
-   pthread_join(thread1, NULL);
+   pthread_join(thread2, NULL);
+   pthread_join(thread3, NULL);
 
    
 }

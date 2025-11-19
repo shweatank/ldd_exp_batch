@@ -10,7 +10,7 @@ void main()
      while(1)
    {
      
-     signal(SIGTSTP, print_num);
+     signal(SIGINT, print_num);
      }
    
 }
