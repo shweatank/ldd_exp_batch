@@ -1,3 +1,9 @@
 .vscode
 README.md
 *.o
+*.cmd
+*.ko
+*.order
+*.symvers
+*.mod
+Makefile
