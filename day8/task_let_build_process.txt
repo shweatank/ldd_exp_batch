@@ -1,0 +1,22 @@
+# 1) Build
+make
+
+# 2) Pick an IRQ to hook (shared) from /proc/interrupts
+cat /proc/interrupts
+
+# Example: suppose you choose IRQ 1 (keyboard) on a test box:
+sudo insmod irq_tasklet_demo.ko irq=1
+
+# 3) Watch dmesg
+dmesg | tail -n 30
+
+# 4) Generate interrupts (e.g., press keys if you hooked keyboard)
+#    You should see lines like:
+#    irq_tasklet_demo: tasklet running, data=1234, tasklet_count=..., irq_count=...
+
+# 5) Check /proc/interrupts to see the IRQ line incrementing
+cat /proc/interrupts | grep irq_tasklet_demo
+
+# 6) Remove module
+sudo rmmod irq_tasklet_demo
+dmesg | tail -n 20

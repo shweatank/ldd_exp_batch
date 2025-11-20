@@ -5,7 +5,7 @@
 #include <linux/delay.h>
 #include <asm/io.h>
 
-#define KEYBOARD_IRQ 1
+#define KEYBOARD_IRQ 12
 #define KBD_DATA_PORT 0x60
 #define MAJOR_NUM 510
 #define DEV_NAME "intrr"
@@ -15,7 +15,7 @@
 static char operation;
 static int buffer[10];
 static int resultt = 0;
-static int flag = 1;
+static int flag = 0;
 
 irqreturn_t keyboard_irq_handler(int irq, void *dev_id){
 	
@@ -48,7 +48,7 @@ irqreturn_t keyboard_irq_handler(int irq, void *dev_id){
 		flag = 0;
 	}
 
-	//printk(KERN_INFO "keyboard irq: scancode = 0x%02X\n",scancode);
+	printk(KERN_INFO "keyboard irq: scancode = 0x%02X\n",scancode);
 
 	return IRQ_HANDLED;
 }
@@ -72,7 +72,6 @@ static ssize_t drv_read(struct file *file, char __user *user_buf,
 	if(copy_to_user(user_buf, &resultt, count))
 		return -EFAULT;
 
-	free_irq(KEYBOARD_IRQ, (void *)(keyboard_irq_handler));
 	return count;
 }
 
@@ -87,8 +86,6 @@ static ssize_t drv_write(struct file *file, const char __user *user_buf,
 	int a = buffer[0];
 	int b = buffer[1];
 	
-	int result = request_irq(KEYBOARD_IRQ, keyboard_irq_handler, IRQF_SHARED,
-				"keyboard irq handler", (void *)(keyboard_irq_handler));
 
 	if(result){
 		printk(KERN_ERR "keyboard_irq: cannot register IRQ %d\n",KEYBOARD_IRQ);
@@ -143,9 +140,11 @@ static struct file_operations fops = {
 
 
 static int __init keyboard_irq_init(void){
+	
 	int result;
 
-	printk(KERN_INFO "Loading custom keyboard IRQ handler..\n");
+	printk(KERN_INFO "Loading custom mouse IRQ handler..\n");
+	
 	int ret = register_chrdev(MAJOR_NUM, DEV_NAME, &fops);	
 	if(ret < 0){
 		
@@ -153,13 +152,16 @@ static int __init keyboard_irq_init(void){
 		return ret;
 	}
 	
+	int result = request_irq(KEYBOARD_IRQ, keyboard_irq_handler, IRQF_SHARED,
+				"keyboard irq handler", (void *)(keyboard_irq_handler));
 
-	printk(KERN_INFO "keyboard_irq: IRQ handler registeres successfully\n");
+	printk(KERN_INFO "mouse_irq: IRQ handler registeres successfully\n");
 	return 0;
 }
 
 static void __exit keyboard_irq_exit(void){
 	unregister_chrdev(MAJOR_NUM,DEV_NAME);
+	free_irq(KEYBOARD_IRQ, (void *)(keyboard_irq_handler));
 	printk(KERN_INFO "keyboard_irq: IRQ handler removed.\n");
 }
 

@@ -1,0 +1,14 @@
+1. what happens when interrupt occurs?
+2. how system boots?
+3. what is the first process when we press the power button?
+
+1.
+
+interrupts API
+1. request_irq()
+2. request_threaded_irq() -> does the top half and bottom half implementation
+
+flags: 
+	IRQ_NONE
+	IRQ_HANDLED
+	
