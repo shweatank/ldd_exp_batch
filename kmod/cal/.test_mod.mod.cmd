@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.mod := printf '%s\n'   test_mod.o | awk '!x[$$0]++ { print("/home/mirafra/sg/ldd_exp_batch/kmod/cal/"$$0) }' > /home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.mod

@@ -1,0 +1,9 @@
+obj-m += test_mod.o
+CC := gcc-13
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+

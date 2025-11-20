@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/sg/ldd_exp_batch/kmod/cal/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/sg/ldd_exp_batch/kmod/cal/Module.symvers -T /home/mirafra/sg/ldd_exp_batch/kmod/cal/modules.order -i Module.symvers -e 

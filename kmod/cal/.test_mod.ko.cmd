@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.ko := ld -r -m elf_x86_64 -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.ko /home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.o /home/mirafra/sg/ldd_exp_batch/kmod/cal/test_mod.mod.o
