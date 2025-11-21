@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/Module.symvers -T /home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/modules.order -i Module.symvers -e 

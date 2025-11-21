@@ -1,0 +1,1 @@
+cmd_/home/mirafra/Desktop/LDD_Learning/Programs/1_hello/Module.symvers :=  scripts/mod/modpost -m -a     -o /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/Module.symvers -T /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/modules.order -i Module.symvers -e 
