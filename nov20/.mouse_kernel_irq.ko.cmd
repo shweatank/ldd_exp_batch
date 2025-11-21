@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/nov20/mouse_kernel_irq.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/mirafra/practice/GIT/ldd_exp_batch/nov20/mouse_kernel_irq.ko /home/mirafra/practice/GIT/ldd_exp_batch/nov20/mouse_kernel_irq.o /home/mirafra/practice/GIT/ldd_exp_batch/nov20/mouse_kernel_irq.mod.o
