@@ -1,4 +1,4 @@
-obj-m += interrupt_driver.o
+obj-m += waitqueue.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

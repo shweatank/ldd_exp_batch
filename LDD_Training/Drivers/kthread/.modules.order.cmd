@@ -1,1 +1,1 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/kthread/modules.order := {   echo /home/mirafra/Desktop/LDD_Learning/Drivers/kthread/kthread_driver.o; :; } > /home/mirafra/Desktop/LDD_Learning/Drivers/kthread/modules.order
+savedcmd_/home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/modules.order := {   echo /home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/kernel_crash.o; :; } > /home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/modules.order

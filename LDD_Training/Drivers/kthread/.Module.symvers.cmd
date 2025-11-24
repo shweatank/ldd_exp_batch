@@ -1,1 +1,1 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/kthread/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/Desktop/LDD_Learning/Drivers/kthread/Module.symvers -T /home/mirafra/Desktop/LDD_Learning/Drivers/kthread/modules.order -i Module.symvers -e 
+savedcmd_/home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/Module.symvers -T /home/mirafra/ldd_exp_batch/LDD_Training/Drivers/kthread/modules.order -i Module.symvers -e 
