@@ -1,1 +1,0 @@
-savedcmd_/home/varshath/GIT/ldd_exp_batch/Day4/interrupt_drv.ko := ld -r -m elf_x86_64 -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/varshath/GIT/ldd_exp_batch/Day4/interrupt_drv.ko /home/varshath/GIT/ldd_exp_batch/Day4/interrupt_drv.o /home/varshath/GIT/ldd_exp_batch/Day4/interrupt_drv.mod.o

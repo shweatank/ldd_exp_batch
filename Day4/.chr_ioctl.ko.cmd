@@ -1,1 +1,0 @@
-savedcmd_/home/varshath/GIT/ldd_exp_batch/Day4/chr_ioctl.ko := ld -r -m elf_x86_64 -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/varshath/GIT/ldd_exp_batch/Day4/chr_ioctl.ko /home/varshath/GIT/ldd_exp_batch/Day4/chr_ioctl.o /home/varshath/GIT/ldd_exp_batch/Day4/chr_ioctl.mod.o
