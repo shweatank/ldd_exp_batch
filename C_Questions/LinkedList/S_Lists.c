@@ -26,6 +26,7 @@ int main(){
 
 	Node *head = NULL;
 	int num = 0;
+	int count = 0;
 	
 	initlist((void **)&head, list_len);
 	Node *curr = head;
@@ -33,8 +34,10 @@ int main(){
 	while(curr != NULL){
 		printf("%d ",curr->data);
 		curr = curr->next;
+		count++;
 	}
 
+	printf("length of the list: %d\n",count);
 	//adding the new node at head
 	
 

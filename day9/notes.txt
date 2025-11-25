@@ -1,0 +1,46 @@
+Boot process in os
+
+1. BIOS - basic input and output
+
+BIOS is a exe program which lives inside a rom-chip and gets triggered when we press the power button
+first thing bios do is run POST [power on self test] -> which in turn runs diagonistic tests on hardware to verify its proper functioning.
+
+After this BIOS starts looking for bootloader, that bootloader is stored in hardware.
+
+UEFI - Unified extensible firmware interface -> refined version of bios for secure boot.
+all the data regarding initializations and startup is stored in .efi file
+
+.efi file is sored on a specific disk -> efi system partition [ESP]
+
+2. MBR - Master boot record
+
+-> One sector on the hard disk that locates the os and to complete the booting process
+-> Responsible for loading and executing the GRUB
+
+3. Bootloader 
+
+for eg: GRUB, LILO, GRUB2
+Gives us an display to let us choose which kernel to boot from
+
+4. kernel init.
+
+once loaded by bootloader into memory, kernel mounts rootfs and initialize the sbin/init program
+
+5. Initramfs
+
+initramfs is part of the kernel and before loading real root file system it, initramfs is loaded
+
+6. /sbin/init
+
+First process ran by kernel
+-> carries on futher booting proc
+-> also sets up the environment for userspace
+
+7. Command shell using getty
+
+getty -> get tty
+-> It manages physical and virtual terminals
+
+
+
+
