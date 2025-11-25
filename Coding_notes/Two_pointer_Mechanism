@@ -1,0 +1,22 @@
+Two pointers Technique
+------------------------------------------------------------------------------------------------------------------------------------
+▶️ Definition
+
+Two pointers is an algorithmic technique where you use two separate indices (pointers) to traverse a data structure (usually an array or linked list) either:
+
+-> from two ends toward the center, or
+-> one pointer chasing another, or
+-> both moving in the same direction but at different speeds
+depending on the problem.
+
+*** Efficient for sorted arrays, linked lists, sliding windows, palindromes, etc.
+------------------------------------------------------------------------------------------------------------------------------------
+
+🧭 Common Types of Two Pointer Techniques
+1. Opposite Direction Pointers (Start & End)
+   Used when processing an array from both ends.
+2. Same Direction / Sliding Window
+   Both pointers move forward; one expands the window, the other shrinks it.
+3. Fast & Slow Pointers
+   One pointer moves faster than the other.
+-------------------------------------------------------------------------------------------------------------------------------------
