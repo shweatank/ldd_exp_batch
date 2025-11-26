@@ -1,0 +1,27 @@
+steps for cross-compiling
+---------------------------
+
+NOTE: we should know exactly for which os/architecture we are cross compiling
+
+My specs - Arm, 32-bit
+
+install "correct toolchain" for cross compiling
+sudo apt install gcc-arm-linux-gnueabihf
+
+clone linux -> specific to rpi 
+git clone https://github.com/raspberrypi/linux.git
+
+updates oldconfig as per the on-system .config
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- olddefconfig
+
+does not compile whole kernel just prepare kernel for external modules build
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules_prepare
+
+
+Topics Discussed
+
+Code Walkthrough
+1. Sysfs & Procfs
+2. Waitqueue & Workqueue
+3. Custom filesystem creation
+

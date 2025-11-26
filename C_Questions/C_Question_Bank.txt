@@ -1,0 +1,15 @@
+C Conceptual programs
+---------------------
+
+1. WAP to find pwr of 2.
+2. WAP to find pwr of 4.
+3. WAP to reverse a number.
+4. WAP to reverse a string.
+5. WAP to remove duplicate char from a string.
+6. WAP to check endianness of the system.
+7. Implement custom sizeof()
+
+
+DSA
+---
+
