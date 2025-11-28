@@ -7,10 +7,11 @@
 *.mod.c
 *.out
 Module.symvers
-*.ko.cmd
-*.mod.cmd
-*.mod.o.cmd
-*.o.cmd
+.*.ko.cmd
+.*.mod.cmd
+.*.mod.o.cmd
+.*.o.cmd
 .modules.order.cmd
 .Module.symvers.cmd
 modules.order
+.*
