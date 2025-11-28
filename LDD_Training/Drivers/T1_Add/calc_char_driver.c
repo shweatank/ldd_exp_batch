@@ -1,3 +1,4 @@
+#include "depend.h"
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
@@ -24,15 +25,16 @@ static int my_release(struct inode *inode, struct file *file);
 static ssize_t my_read(struct file *file, char __user *user_buf, size_t count, loff_t *ppos);
 static ssize_t my_write(struct file *file, const char __user *user_buf, size_t count, loff_t *ppos);
 
+
 /* Open */
 static int my_open(struct inode *inode, struct file *file) {
-	pr_info("Device opened\n");
+	open_print();
 	return 0;
 }
 
 /* Close */
 static int my_release(struct inode *inode, struct file *file) {
-	pr_info("Device closed\n");
+	close_print();
 	return 0;
 }
 
@@ -55,7 +57,7 @@ static ssize_t my_write(struct file *file, const char __user *user_buf, size_t c
 
 	if (copy_from_user((char *)&buffer, user_buf, count))
 		return -EFAULT;
-	
+
 	pr_info("%d %c %d\n", buffer.n1, buffer.op, buffer.n2);
 
 	switch (buffer.op) {
@@ -72,7 +74,7 @@ static ssize_t my_write(struct file *file, const char __user *user_buf, size_t c
 			result = buffer.n1 / buffer.n2;
 			break;
 	}
-	
+
 	pr_info("Written data %d %c %d\n", buffer.n1, buffer.op, buffer.n2);
 	return count;
 }

@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/modules.order := {   echo /home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/simple_char_driver.o; :; } > /home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/modules.order

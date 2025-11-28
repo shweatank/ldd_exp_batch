@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/ioctl_calc_driver.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/ioctl_calc_driver.ko /home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/ioctl_calc_driver.o /home/mirafra/Desktop/LDD_Learning/Drivers/ioctl/ioctl_calc_driver.mod.o

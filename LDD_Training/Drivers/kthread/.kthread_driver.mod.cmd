@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/kthread/kthread_driver.mod := printf '%s\n'   kthread_driver.o | awk '!x[$$0]++ { print("/home/mirafra/Desktop/LDD_Learning/Drivers/kthread/"$$0) }' > /home/mirafra/Desktop/LDD_Learning/Drivers/kthread/kthread_driver.mod

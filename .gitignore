@@ -1,0 +1,9 @@
+#ignore
+*.mod
+*.o
+*.order
+*.ko
+*.mod.o
+*.mod.c
+*.out
+Module.symvers

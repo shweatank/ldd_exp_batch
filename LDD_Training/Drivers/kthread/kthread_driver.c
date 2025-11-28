@@ -9,7 +9,6 @@
 static struct task_struct *demo_task;
 static int counter;
 
-
 static int demo_fn(void *arg) {
 	int *cnt = (int *)arg;
 

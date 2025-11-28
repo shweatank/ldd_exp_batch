@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/Module.symvers -T /home/mirafra/Desktop/LDD_Learning/Drivers/Intro/simple_char_driver/modules.order -i Module.symvers -e 

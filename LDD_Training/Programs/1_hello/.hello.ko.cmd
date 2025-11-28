@@ -1,1 +1,0 @@
-cmd_/home/mirafra/Desktop/LDD_Learning/Programs/1_hello/hello.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/hello.ko /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/hello.o /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/hello.mod.o;  true

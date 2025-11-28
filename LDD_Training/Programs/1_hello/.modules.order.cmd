@@ -1,1 +1,0 @@
-cmd_/home/mirafra/Desktop/LDD_Learning/Programs/1_hello/modules.order := {   echo /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/hello.o; :; } > /home/mirafra/Desktop/LDD_Learning/Programs/1_hello/modules.order
