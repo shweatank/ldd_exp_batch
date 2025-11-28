@@ -1,17 +1,21 @@
-#ignore
-*.mod
+
+# Object files
 *.o
-*.order
 *.ko
-*.mod.o
+*.mod
 *.mod.c
-*.out
-Module.symvers
-.*.ko.cmd
-.*.mod.cmd
-.*.mod.o.cmd
+*.order
+*.symvers
+
+# .cmd files
+*.cmd
+
+# Hidden files starting with dot
 .*.o.cmd
-.modules.order.cmd
-.Module.symvers.cmd
-modules.order
-.*
+.*.mod.cmd
+.*.ko.cmd
+.*.order.cmd
+.*.symvers.cmd
+
+#makefile
+Makefile
