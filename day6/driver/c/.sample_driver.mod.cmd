@@ -1,0 +1,1 @@
+savedcmd_/home/dell/ldd_exp_batch/day6/driver/c/sample_driver.mod := printf '%s\n'   sample_driver.o | awk '!x[$$0]++ { print("/home/dell/ldd_exp_batch/day6/driver/c/"$$0) }' > /home/dell/ldd_exp_batch/day6/driver/c/sample_driver.mod

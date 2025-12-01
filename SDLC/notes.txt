@@ -1,0 +1,54 @@
+SDLC - Software Development life cycle
+
+It is a systematic approach to develop a quality software
+
+It invloves multiple phases and various stake holders participating in each stage to ensure the successful delivery of software product.
+
+Agile methodologies
+
+1. Planning - obj. -> To Define project goals, feasability & risk
+	    - People involved : 1. Project Manager
+				2. Buisness Analyst
+				3. Product owner
+				4. Customer
+				5. Finance Team
+				6. Technical Architect
+
+2. Requirement analysis - obj. -> To gather & document detail software requirements
+			- People involved : 1. Buisness Analyst
+					    2. Product owner
+					    3. Customer
+				            4. System Analyst
+				            5. Regulatory & Compliance team
+
+3. Design Phase - obj. -> To create system architecture & design models
+		- People involved : 1. Solution architecture
+			  	    2. UI/UX
+				    3. Database Engineers
+				    4. Security Analysis
+				    5. Project Manager
+
+4. Development Phase - obj. -> To develop actual software by writing code
+		     - People involved : 1. Software dev.
+					 2. Devops Eng.
+					 3. database administration
+					 4. Technical leads
+					 5. Security Eng.
+
+5. Testing Phase - obj. -> To validate software functionality performance & security
+		 - People involved : 1. QA Engineers
+				     2. Automation tester
+				     3. Security tester
+				     4. user exp. tester
+				     5. Buisness Analyst
+
+6. Deployment stage - obj. -> To deploy software to production environment
+		    - People involved : 1. Devops Eng. 
+					2. Release Manager
+					3. System Administrator
+					4. support team
+
+7. Maintenance & Support team - obj. -> To handle software updates & bug fixes
+			      - People involved : 1. Support Eng.
+						  2. Maintanece team
+						  3. Security team

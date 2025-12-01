@@ -1,0 +1,1 @@
+savedcmd_/home/dell/ldd_exp_batch/day6/driver/c/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/dell/ldd_exp_batch/day6/driver/c/Module.symvers -T /home/dell/ldd_exp_batch/day6/driver/c/modules.order -i Module.symvers -e 

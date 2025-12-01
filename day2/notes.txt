@@ -44,3 +44,10 @@ steps to create dynamic (.so) and dynamically link it to source code
 1. gcc -fPIC -c mathlib.c -o mathlibd.o
 2. gcc -shared -o libmathlibd.so mathlibd.o
 3. gcc new_main_dynamic.c -L . -lmathlib -o main_dynamic
+
+
+
+Questions 
+=========================================================
+1. where is local const variable stored? Can we modify it?
+

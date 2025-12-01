@@ -1,3 +1,3 @@
 1. WAP where use signal to trigger parent process to copy data using ( message queue ) send it to child process which is in wait state for data then it does calculation and send data back to parent and send signal to parent so parent can print it ( until signal is not received it should be waiting for result to print ) so we have three processes here
 
-2. 
+2. SDLC - Software development life cycle

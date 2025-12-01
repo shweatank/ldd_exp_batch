@@ -40,7 +40,13 @@ int main(){
 		curr = curr->next;
 	}while(curr->next != NULL);
 	printf("%d\n",curr->data);
-
+	curr = head;
+	int count = 0;
+	while(curr != NULL){
+		curr = curr->next;
+		count++;
+	}
+	printf("c %d\n",count);
 	curr = head->next;
 	prev = head;
 	Node *store = NULL;

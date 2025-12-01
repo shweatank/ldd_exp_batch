@@ -63,7 +63,7 @@ static int __init basic_threaded_irq_init(void)
 			irq,
 			irq_top,        /* top half */
 			irq_thread,     /* bottom half( thread ) */
-			0,              /* no special flags */
+			IRQF_SHARED,              /* no special flags */
 			name,
 			NULL
 			);

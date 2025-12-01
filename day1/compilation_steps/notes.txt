@@ -1,0 +1,7 @@
+### To get preprocessed file
+gcc -E main.c -o main.i
+### To get assembly code
+gcc -S main.i -o main.s
+### To get object code
+gcc -c main.s -o main.o
+ 

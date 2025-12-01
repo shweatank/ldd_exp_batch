@@ -9,6 +9,7 @@ typedef struct Node{
 int main(){
 	int len = 0;
 	int num = 0;
+
 	Node *head = NULL;
 	Node *curr = NULL;
 	Node *prev = NULL;
@@ -18,7 +19,7 @@ int main(){
 	//printf("Enter data:");
 	for(int i = 0; i<len; i++){
 		curr = malloc(sizeof(Node));
-		printf("enter data: ");
+		printf("Enter data in index %d: ",i+1);
 		scanf("%d",&num);
 		curr->data = num;
 
@@ -39,10 +40,10 @@ int main(){
 	}while(curr->next != NULL);
 	printf("%d\n",curr->data);
 
-	curr = head->next;
-	prev = head;
+	//curr = head;
+	//prev = head;
 
-	for(int i = 0; i<len; i++){
+	/*for(int i = 0; i<len; i++){
 		if(curr == NULL)
 			break;
 		for(int j = 1; j <len; j++){
@@ -58,10 +59,45 @@ int main(){
 		prev = curr;
 		curr = curr->next;
 		
+	}*/
+	curr = head;
+	Node *next = head->next;
+	prev = NULL;
+	int d = 1;
+	Node *tmp = head;
+
+	for(int i = 0; i<len; i++){
+		for(int j = 1; j<len; j++){
+			if(curr->data > next->data){
+				Node *store = curr;
+				curr->next = next->next;
+				next->next = curr;
+				if(prev){
+					prev = curr;
+					prev->next = next;
+				}else{
+					head = next;
+					prev = next;
+				}
+
+				next = curr->next;
+			}else{
+				prev = curr;
+				curr = curr->next;
+				next = next->next;
+			}
+			
+			printf("%d %d %d\n",prev->data,curr->data,next->data);
+
+		}
+		prev = tmp;
+		tmp = tmp->next;
+		curr = tmp;
+		next = curr->next;
 	}
 
 	curr = head;
-	
+
 	do{
 		printf("%d ",curr->data);
 		curr = curr->next;

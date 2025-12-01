@@ -6,7 +6,7 @@
 #define DEVICE "/dev/intrr"
 
 #define MAJOR_NUM 510
-#define IOCTL_GET_NUM _IOR(MAJOR_NUM, 1, int)
+#define IOCTL_GET_NUM _IOR('a', 1, int)
 
 int main(){
 	int fd;
@@ -37,7 +37,7 @@ int main(){
 		printf("write failed %d\n",ret);
 		return -1;
 	}
-	//sleep(1);
+	sleep(5);
 	
 	//write operation-to-be-performed to driver through ioctl
 	//printf("Sending value %c to kernel\n",op);

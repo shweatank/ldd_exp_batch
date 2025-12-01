@@ -10,7 +10,7 @@
 #define MAJOR_NUM 510
 #define DEV_NAME "intrr"
 
-#define IOCTL_GET_NUM _IOW(MAJOR_NUM,1,int)
+#define IOCTL_GET_NUM _IOR('a',1,int)
 
 static char operation;
 static int buffer[10];
@@ -45,7 +45,7 @@ irqreturn_t keyboard_irq_handler(int irq, void *dev_id){
 				break;
 		}
 
-		flag = 0;
+		//flag = 0;
 	}
 
 	//printk(KERN_INFO "keyboard irq: scancode = 0x%02X\n",scancode);
@@ -72,7 +72,6 @@ static ssize_t drv_read(struct file *file, char __user *user_buf,
 	if(copy_to_user(user_buf, &resultt, count))
 		return -EFAULT;
 
-	free_irq(KEYBOARD_IRQ, (void *)(keyboard_irq_handler));
 	return count;
 }
 
@@ -86,17 +85,19 @@ static ssize_t drv_write(struct file *file, const char __user *user_buf,
 
 	int a = buffer[0];
 	int b = buffer[1];
-	
+	int dummy = 0;
 	int result = request_irq(KEYBOARD_IRQ, keyboard_irq_handler, IRQF_SHARED,
-				"keyboard irq handler", (void *)(keyboard_irq_handler));
+				"keyboard irq handler", &dummy);
 
 	if(result){
 		printk(KERN_ERR "keyboard_irq: cannot register IRQ %d\n",KEYBOARD_IRQ);
 		return result;
 	}
 
-	msleep(1000);
+	msleep(3000);
 
+	free_irq(KEYBOARD_IRQ, &dummy);
+	
 	printk("Performing %d %c %d\n",a,operation,b);
 		
 	if(operation == '+'){
@@ -110,16 +111,11 @@ static ssize_t drv_write(struct file *file, const char __user *user_buf,
 	}
 
 	printk("The result calculated: %d\n",resultt);
-	//free_irq();
 	return count;
 }
 
 static long my_ioctl(struct file *file, unsigned int cmd, unsigned long arg){
 	
-	char user_val;
-	
-	printk("cmd : %d\n",cmd);
-
 	switch(cmd){
 		case IOCTL_GET_NUM:
 			if(copy_to_user((int __user *)arg, &resultt, sizeof(resultt)))
@@ -143,9 +139,11 @@ static struct file_operations fops = {
 
 
 static int __init keyboard_irq_init(void){
-	int result;
+	
+	//int result;
 
 	printk(KERN_INFO "Loading custom keyboard IRQ handler..\n");
+	
 	int ret = register_chrdev(MAJOR_NUM, DEV_NAME, &fops);	
 	if(ret < 0){
 		
