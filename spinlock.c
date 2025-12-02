@@ -9,10 +9,20 @@
 * One timer increments a shared counter.
 
 * init() also increments once.
-
+	
 * Both paths use a spinlock to protect 'shared'.
 
 */
+
+for (int i = 0; i < n; i++)
+{
+	prinf(i);
+}
+
+for (int i = 0; i < 100; i++)
+{
+	prinf(i);
+}
  
 #include <linux/module.h>
 
