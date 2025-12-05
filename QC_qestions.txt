@@ -1,0 +1,39 @@
+C progs
+-------
+
+1. write a program to add 1 to last digit in array and add carry if result is greater than 9. function signature as mentioned below
+   i/p = [1,2,3,4,9]
+   o/p = [1,2,3,5,0]
+
+Answer - 
+function signature : int * plusone(int *digits, int digitsSize, int *returnsize)
+{
+	int tmp = digits[digitsSize-1] + 1;
+	if (tmp == 10){
+		carry = 1;
+		digits[digitsSize - 1] = 0;
+		for(int i = digitsSize-2; i > 1; i++){
+				int tmp = digits[i] + carry;
+				if(tmp > 9){
+					carry = 1;
+					digits[i] = 0;
+				}else{
+					digits[i] = carry + digits[i];
+					break;
+				}
+		}
+	}else{
+		carry = 0;
+		digits[digitsSize - 1] = carry;
+	}
+	
+	 
+}
+2. WAP to reverse a number and assign it to itself. Optimizations ways
+
+Gstreamer Questions
+-------------------
+
+1. what are dynamic and static pipeline gstreamer. 
+2. what gstreamer plugin you have used? details about some of them.
+3. How will gstremer pipeline look like if media data has integrated data of audio and text.
