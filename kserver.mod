@@ -1,2 +1,1 @@
 /home/mirafra/kernel_tcp/kserver.o
-/home/mirafra/kernel_tcp/kclient.o
