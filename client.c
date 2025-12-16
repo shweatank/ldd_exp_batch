@@ -23,7 +23,7 @@ int main()
     /* Server address */
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(PORT);
-    inet_pton(AF_INET, "10.53.202.102", &server_addr.sin_addr);
+    inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
 
     /* Connect */
     if (connect(sock, (struct sockaddr *)&server_addr,
