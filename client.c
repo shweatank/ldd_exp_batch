@@ -12,47 +12,43 @@ int main()
     int sock;
     struct sockaddr_in server_addr;
     char buffer[BUF_SIZE];
+    FILE *fp;
 
-    /* Create socket */
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("socket");
         exit(1);
     }
 
-    /* Server address */
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(PORT);
     inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
 
-    /* Connect */
-    if (connect(sock, (struct sockaddr *)&server_addr,
-                sizeof(server_addr)) < 0) {
-        perror("connect");
+    connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    printf("Connected to File Server\n");
+
+    /* Enter file name */
+    printf("Enter file name to send: ");
+    scanf("%s", buffer);
+
+    fp = fopen(buffer, "rb");
+    if (fp == NULL) {
+        perror("fopen");
         exit(1);
     }
 
-    printf("Connected to server.\n");
+    /* Send file name */
+    send(sock, buffer, strlen(buffer), 0);
 
-    /* Infinite send/receive loop */
-    while (1) {
-        /* Send message */
-        snprintf(buffer, BUF_SIZE, "Hello from client");
-        send(sock, buffer, strlen(buffer), 0);
-
-        /* Receive response */
-        memset(buffer, 0, BUF_SIZE);
-        int n = recv(sock, buffer, BUF_SIZE, 0);
-        if (n <= 0) {
-            printf("Server disconnected\n");
-            break;
-        }
-
-        printf("Server: %s\n", buffer);
-
-        sleep(1);   // avoid flooding
+    /* Send file data */
+    int bytes;
+    while ((bytes = fread(buffer, 1, BUF_SIZE, fp)) > 0) {
+        send(sock, buffer, bytes, 0);
     }
 
+    printf("File sent successfully\n");
+
+    fclose(fp);
     close(sock);
     return 0;
 }
