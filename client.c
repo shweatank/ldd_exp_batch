@@ -12,7 +12,6 @@ int main()
     int sock;
     struct sockaddr_in server_addr;
     char buffer[BUF_SIZE];
-    FILE *fp;
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -25,30 +24,23 @@ int main()
     inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
 
     connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
-    printf("Connected to File Server\n");
+    printf("Connected to Calculator Server\n");
 
-    /* Enter file name */
-    printf("Enter file name to send: ");
-    scanf("%s", buffer);
+    while (1) {
+        printf("\nEnter calculation (e.g., 10 + 5): ");
+        fgets(buffer, BUF_SIZE, stdin);
 
-    fp = fopen(buffer, "rb");
-    if (fp == NULL) {
-        perror("fopen");
-        exit(1);
+        send(sock, buffer, strlen(buffer), 0);
+
+        memset(buffer, 0, BUF_SIZE);
+        int n = recv(sock, buffer, BUF_SIZE, 0);
+        if (n <= 0)
+            break;
+
+        printf("Server: %s\n", buffer);
     }
 
-    /* Send file name */
-    send(sock, buffer, strlen(buffer), 0);
-
-    /* Send file data */
-    int bytes;
-    while ((bytes = fread(buffer, 1, BUF_SIZE, fp)) > 0) {
-        send(sock, buffer, bytes, 0);
-    }
-
-    printf("File sent successfully\n");
-
-    fclose(fp);
     close(sock);
     return 0;
 }
+
