@@ -1,9 +1,23 @@
 #include<stdio.h>
-int a=10;
+
 int main()
 {
-	printf("%d",a);
-	a=a+10;
-	return 0;
+	FILE*fp;
+	char ch;
+
+	fp = fopen("file.txt", "w");
+    	fputs("Hello World!\n", fp);
+    	fclose(fp);
+
+
+        fp = fopen("file.txt", "w");
+	printf("File content:hello wold\n");
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }	
+
+    fclose(fp);
+
+    return 0;
 }
 
