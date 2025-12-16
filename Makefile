@@ -1,10 +1,8 @@
-obj-m += mem_test.o
-
-KDIR := /home/mirafra/linux
+obj-m := keyboard_irq.o
 
 all:
-    make -C $(KDIR) M=$(PWD) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 clean:
-    make -C $(KDIR) M=$(PWD) clean
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
