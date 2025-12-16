@@ -1,80 +1,104 @@
-// driver.c
-#include <linux/module.h>
-#include <linux/fs.h>
-#include <linux/uaccess.h>
-#include "driver.h"
+/*
+ * super_simple_userspace_driver_struct.c
+ *
+ * Same simple open/read/write/close "driver",
+ * but now the APIs are stored in a struct and called via that struct.
+ */
 
-static int major;                
-static char msg[BUF_LEN];      
-static int msg_len = 0;
+#include <stdio.h>
+#include <string.h>
 
-static int dev_open(struct inode *inode, struct file *file) {
-    printk(KERN_INFO "Device opened\n");
+/* -------------------------------
+   Device: simple buffer + state
+   ------------------------------- */
+char device_buffer[64];
+int  device_is_open = 0;
+
+/* -------------------------------
+   Driver API functions
+   ------------------------------- */
+
+int my_open(void)
+{
+    if (device_is_open) {
+        printf("Device already open!\n");
+        return -1;
+    }
+    device_is_open = 1;
+    printf("Device opened\n");
     return 0;
 }
 
-static int dev_release(struct inode *inode, struct file *file) {
-    printk(KERN_INFO "Device closed\n");
-    return 0;
-}
-
-static ssize_t dev_read(struct file *file, char __user *buf, size_t len, loff_t *offset) {
-    int bytes_read = 0;
-
-    if (*offset >= msg_len)
-        return 0;
-
-    while (len && (*offset < msg_len)) {
-        put_user(msg[*offset], buf++);
-        len--;
-        (*offset)++;
-        bytes_read++;
+int my_write(const char *data)
+{
+    if (!device_is_open) {
+        printf("Device not open!\n");
+        return -1;
     }
 
-    printk(KERN_INFO "Read %d bytes\n", bytes_read);
-    return bytes_read;
+    strncpy(device_buffer, data, sizeof(device_buffer) - 1);
+    device_buffer[sizeof(device_buffer) - 1] = '\0';
+
+    printf("Write: '%s'\n", device_buffer);
+    return 0;
 }
 
-static ssize_t dev_write(struct file *file, const char __user *buf, size_t len, loff_t *offset) {
-    if (len > BUF_LEN)
-        len = BUF_LEN;
+int my_read(char *out)
+{
+    if (!device_is_open) {
+        printf("Device not open!\n");
+        return -1;
+    }
 
-    if (copy_from_user(msg, buf, len))
-        return -EFAULT;
-
-    msg_len = len;
-    printk(KERN_INFO "Received %d bytes from user\n", msg_len);
-    return len;
+    printf("Read : '%s'\n", device_buffer);
+    strcpy(out, device_buffer);
+    return 0;
 }
 
-static struct file_operations fops = {
-    .open = dev_open,
-    .release = dev_release,
-    .read = dev_read,
-    .write = dev_write
+int my_close(void)
+{
+    if (!device_is_open) {
+        printf("Device already closed!\n");
+        return -1;
+    }
+    device_is_open = 0;
+    printf("Device closed\n");
+    return 0;
+}
+
+/* -------------------------------
+   Struct holding the APIs
+   (like a tiny file_operations)
+   ------------------------------- */
+
+struct driver_ops {
+    int (*open)(void);
+    int (*write)(const char *data);
+    int (*read)(char *out);
+    int (*close)(void);
 };
 
-static int __init simple_init(void) {
-    major = register_chrdev(0, DEVICE_NAME, &fops);
+/* Initialize the ops table */
+struct driver_ops my_driver = {
+    .open  = my_open,
+    .write = my_write,
+    .read  = my_read,
+    .close = my_close
+};
 
-    if (major < 0) {
-        printk(KERN_ALERT "Registering char device failed\n");
-        return major;
-    }
+/* -------------------------------
+   Demo / test
+   ------------------------------- */
 
-    printk(KERN_INFO "Registered device with major %d\n", major);
+int main(void)
+{
+    char temp[64];
+
+    /* All calls now go via the struct */
+    my_driver.open();
+    my_driver.write("hello driver via struct");
+    my_driver.read(temp);
+    my_driver.close();
+
     return 0;
 }
-
-static void __exit simple_exit(void) {
-    unregister_chrdev(major, DEVICE_NAME);
-    printk(KERN_INFO "Device unregistered\n");
-}
-
-module_init(simple_init);
-module_exit(simple_exit);
-
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Abhi");
-MODULE_DESCRIPTION("Simple Character Driver");
-
