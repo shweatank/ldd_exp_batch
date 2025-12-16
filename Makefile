@@ -1,12 +1,8 @@
-obj-m := waitqueue_example.o
-
-KDIR := /lib/modules/$(shell uname -r)/build
-PWD  := $(shell pwd)
+obj-m += square_driver.o
 
 all:
-	$(MAKE) -C $(KDIR) M=$(PWD) modules
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 clean:
-	$(MAKE) -C $(KDIR) M=$(PWD) clean
-
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
