@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/dec2/pavan/uart/uart_kernel_alloc.mod := printf '%s\n'   uart_kernel_alloc.o | awk '!x[$$0]++ { print("/home/mirafra/practice/GIT/ldd_exp_batch/dec2/pavan/uart/"$$0) }' > /home/mirafra/practice/GIT/ldd_exp_batch/dec2/pavan/uart/uart_kernel_alloc.mod

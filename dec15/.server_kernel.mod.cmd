@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/dec15/server_kernel.mod := printf '%s\n'   server_kernel.o | awk '!x[$$0]++ { print("/home/mirafra/practice/GIT/ldd_exp_batch/dec15/"$$0) }' > /home/mirafra/practice/GIT/ldd_exp_batch/dec15/server_kernel.mod

@@ -1,0 +1,81 @@
+#include <linux/kernel.h>
+#include <linux/gpio.h>
+#include <linux/timer.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/pwm.h>
+
+#define LED_PIN 529
+
+static struct pwm_device *pwm;
+
+/*static struct pwm_lookup board_pwm_lookup[] = {
+        PWM_LOOKUP("tegra-pwm", 0, "pwm-backlight", NULL,
+                   50000, PWM_POLARITY_NORMAL),
+};*/
+
+
+
+static int led=0;
+static struct timer_list led_timer;
+
+static void led_blink(struct timer_list *tm) {
+	led = !led;
+	gpio_set_value(LED_PIN, led);
+	printk(KERN_INFO "Led = %d\n", led);
+	mod_timer(&led_timer, jiffies+msecs_to_jiffies(1000));
+}
+
+static int __init basic_init(void) {
+	int ret;
+	if (gpio_is_valid(LED_PIN) == false) {
+		printk(KERN_INFO "the gpio pin is not valid\n");
+		return -1;
+	}
+	ret = gpio_request(LED_PIN, "LED");
+	if (ret<0) {
+		printk(KERN_INFO "the gpio request fail\n");
+		return ret;
+	}
+
+       
+	gpio_direction_output(LED_PIN,0);
+         
+        
+        
+	timer_setup(&led_timer, led_blink,0);
+	mod_timer(&led_timer, jiffies+msecs_to_jiffies(1000));
+        
+        pwm_add_table(board_pwm_lookup, ARRAY_SIZE(board_pwm_lookup));
+
+	printk(KERN_INFO "init module loaded\n");
+
+	return 0;
+}
+
+
+
+static void __exit basic_exit(void)
+{
+   gpio_free(LED_PIN);
+   printk(KERN_INFO"module was unloaded\n");
+}
+
+
+module_init(basic_init);
+module_exit(basic_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("TECHDHBA");
+MODULE_DESCRIPTION("BASIC GPIO DRIVER - LED_BLINK");
+
+
+
+
+
+
+
+
+
+
+

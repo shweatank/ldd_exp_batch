@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/uart/uart_kernel_alloc.mod := printf '%s\n'   uart_kernel_alloc.o | awk '!x[$$0]++ { print("/home/pi/Documents/uart/"$$0) }' > /home/pi/Documents/uart/uart_kernel_alloc.mod

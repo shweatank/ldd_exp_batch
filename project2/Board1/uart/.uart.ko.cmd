@@ -1,0 +1,1 @@
+savedcmd_/home/pi/spi_displaytest/uart/uart.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/pi/spi_displaytest/uart/uart.ko /home/pi/spi_displaytest/uart/uart.o /home/pi/spi_displaytest/uart/uart.mod.o /home/pi/spi_displaytest/uart/.module-common.o

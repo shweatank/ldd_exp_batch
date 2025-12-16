@@ -76,6 +76,18 @@ static ssize_t my_read(struct file *file, char __user *user_buf, size_t count, l
           buffer_size = count;
           *ppos = 0;
           pr_info("Written numbers %d %d\n", buffer[0], buffer[1]);
+
+   printk(KERN_INFO "loading custom keyboard IRQ Handler ..\n");
+   int result;
+   result = request_irq(KEYBOARD_IRQ, keyboard_irq_handler, IRQF_SHARED,
+                                     "keyboard_irq_handler", (void *)(keyboard_irq_handler));
+      if(result)
+         {
+           printk(KERN_ERR "keyboard_irq: cannot register IRQ %d\n",KEYBOARD_IRQ);
+            return result;
+              }
+     printk(KERN_INFO "keyboard_irq : IRQ handler registered succesfully\n");
+
           return count;
   }
 
@@ -97,7 +109,7 @@ static int __init keyboard_irq_init(void)
         return major;
     }
 
-    printk(KERN_INFO "loading custom keyboard IRQ Handler ..\n");
+  /*  printk(KERN_INFO "loading custom keyboard IRQ Handler ..\n");
     result = request_irq(KEYBOARD_IRQ, keyboard_irq_handler, IRQF_SHARED,
                                     "keyboard_irq_handler", (void *)(keyboard_irq_handler));
 
@@ -106,7 +118,8 @@ static int __init keyboard_irq_init(void)
           printk(KERN_ERR "keyboard_irq: cannot register IRQ %d\n",KEYBOARD_IRQ);
            return result;
              }
-    printk(KERN_INFO "keyboard_irq : IRQ handler registered succesfully\n");
+    printk(KERN_INFO "keyboard_irq : IRQ handler registered succesfully\n"); */
+ 
     printk(KERN_INFO "kbd_calc loaded. Major=%d\n", MAJOR_NUM);    
    
 return 0;

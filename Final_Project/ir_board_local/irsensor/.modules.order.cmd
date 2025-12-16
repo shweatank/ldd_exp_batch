@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Final_Project/ir_board_local/irsensor/modules.order := {   echo /home/pi/Final_Project/ir_board_local/irsensor/ir_sensor_edge.o; :; } > /home/pi/Final_Project/ir_board_local/irsensor/modules.order

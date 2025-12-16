@@ -1,0 +1,1 @@
+savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/dec2/usb/usb_kernel.mod := printf '%s\n'   usb_kernel.o | awk '!x[$$0]++ { print("/home/mirafra/practice/GIT/ldd_exp_batch/dec2/usb/"$$0) }' > /home/mirafra/practice/GIT/ldd_exp_batch/dec2/usb/usb_kernel.mod

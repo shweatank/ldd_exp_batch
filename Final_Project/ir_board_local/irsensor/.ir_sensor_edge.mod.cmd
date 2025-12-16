@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Final_Project/ir_board_local/irsensor/ir_sensor_edge.mod := printf '%s\n'   ir_sensor_edge.o | awk '!x[$$0]++ { print("/home/pi/Final_Project/ir_board_local/irsensor/"$$0) }' > /home/pi/Final_Project/ir_board_local/irsensor/ir_sensor_edge.mod

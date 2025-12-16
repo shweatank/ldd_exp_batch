@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Final_Project/ir_board_local/uart/uart.mod := printf '%s\n'   uart.o | awk '!x[$$0]++ { print("/home/pi/Final_Project/ir_board_local/uart/"$$0) }' > /home/pi/Final_Project/ir_board_local/uart/uart.mod

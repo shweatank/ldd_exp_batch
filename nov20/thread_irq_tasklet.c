@@ -83,9 +83,9 @@ static int __init basic_irq_tasklet_init(void)
             irq,
             irq_top,       // top-half
             irq_thread,    // threaded bottom half
-            0,
+            IRQF_SHARED,
             name,
-            NULL
+            irq_top,
     );
 
     if (ret) {

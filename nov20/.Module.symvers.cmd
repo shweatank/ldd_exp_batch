@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/nov20/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/mirafra/practice/GIT/ldd_exp_batch/nov20/Module.symvers -T /home/mirafra/practice/GIT/ldd_exp_batch/nov20/modules.order -i Module.symvers -e 

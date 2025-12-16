@@ -1,0 +1,14 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+
+	compatible = "rpi,uart-driver";
+	
+	fragment@0 {
+	target = <&uart4>;
+    __overlay__ {
+      status = "okay";
+    };
+  };
+};

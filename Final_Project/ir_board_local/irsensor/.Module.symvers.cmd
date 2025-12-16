@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Final_Project/ir_board_local/irsensor/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/pi/Final_Project/ir_board_local/irsensor/Module.symvers -n -T /home/pi/Final_Project/ir_board_local/irsensor/modules.order -i Module.symvers -e 

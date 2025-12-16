@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/pavan/i2c/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/pi/Documents/pavan/i2c/Module.symvers -n -T /home/pi/Documents/pavan/i2c/modules.order -i Module.symvers -e 

@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/pavan/hello_test.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/pi/Documents/pavan/hello_test.ko /home/pi/Documents/pavan/hello_test.o /home/pi/Documents/pavan/hello_test.mod.o /home/pi/Documents/pavan/.module-common.o

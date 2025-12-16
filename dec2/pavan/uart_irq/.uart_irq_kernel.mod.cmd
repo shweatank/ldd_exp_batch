@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/pavan/uart_irq/uart_irq_kernel.mod := printf '%s\n'   uart_irq_kernel.o | awk '!x[$$0]++ { print("/home/pi/Documents/pavan/uart_irq/"$$0) }' > /home/pi/Documents/pavan/uart_irq/uart_irq_kernel.mod

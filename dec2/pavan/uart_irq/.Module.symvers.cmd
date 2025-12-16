@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/pavan/uart_irq/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/pi/Documents/pavan/uart_irq/Module.symvers -n -T /home/pi/Documents/pavan/uart_irq/modules.order -i Module.symvers -e 

@@ -1,0 +1,1 @@
+savedcmd_/home/pi/Documents/pavan/i2c/i2c_driver.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/pi/Documents/pavan/i2c/i2c_driver.ko /home/pi/Documents/pavan/i2c/i2c_driver.o /home/pi/Documents/pavan/i2c/i2c_driver.mod.o /home/pi/Documents/pavan/i2c/.module-common.o
