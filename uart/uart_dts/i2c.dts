@@ -1,0 +1,20 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2711";
+
+    fragment@0 {
+        target = <&i2c1>;    // MUST match label from main Pi .dts
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";
+
+			oled0: ssd1306@3c {
+                compatible = "mycompany,my-i2c-oled";  // MUST match driver
+                reg = <0x3c>;   // I2C address of OLED
+            };
+        };
+    };
+};

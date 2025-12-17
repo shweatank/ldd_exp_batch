@@ -1,0 +1,340 @@
+// SPDX-License-Identifier: GPL-2.0
+#include <linux/module.h>
+#include <linux/i2c.h>
+#include <linux/cdev.h>
+#include <linux/device.h>
+#include <linux/fs.h>
+#include <linux/uaccess.h>
+#include <linux/delay.h>
+
+#define SSD1306_WIDTH 128
+#define SSD1306_HEIGHT 32
+#define DEVICE_NAME "oled_char"
+#define MAX_CHARS (SSD1306_WIDTH / 6) // 5px font + 1px spacing
+
+// Full 5x7 font for ASCII 32–127
+static const u8 font5x7[96][5] = {
+    {0x00,0x00,0x00,0x00,0x00}, // ' '
+    {0x00,0x00,0x5F,0x00,0x00}, // '!'
+    {0x00,0x07,0x00,0x07,0x00}, // '"'
+    {0x14,0x7F,0x14,0x7F,0x14}, // '#'
+    {0x24,0x2A,0x7F,0x2A,0x12}, // '$'
+    {0x23,0x13,0x08,0x64,0x62}, // '%'
+    {0x36,0x49,0x55,0x22,0x50}, // '&'
+    {0x00,0x05,0x03,0x00,0x00}, // '''
+    {0x00,0x1C,0x22,0x41,0x00}, // '('
+    {0x00,0x41,0x22,0x1C,0x00}, // ')'
+    {0x14,0x08,0x3E,0x08,0x14}, // '*'
+    {0x08,0x08,0x3E,0x08,0x08}, // '+'
+    {0x00,0x50,0x30,0x00,0x00}, // ','
+    {0x08,0x08,0x08,0x08,0x08}, // '-'
+    {0x00,0x60,0x60,0x00,0x00}, // '.'
+    {0x20,0x10,0x08,0x04,0x02}, // '/'
+    {0x3E,0x51,0x49,0x45,0x3E}, // '0'
+    {0x00,0x42,0x7F,0x40,0x00}, // '1'
+    {0x42,0x61,0x51,0x49,0x46}, // '2'
+    {0x21,0x41,0x45,0x4B,0x31}, // '3'
+    {0x18,0x14,0x12,0x7F,0x10}, // '4'
+    {0x27,0x45,0x45,0x45,0x39}, // '5'
+    {0x3C,0x4A,0x49,0x49,0x30}, // '6'
+    {0x01,0x71,0x09,0x05,0x03}, // '7'
+    {0x36,0x49,0x49,0x49,0x36}, // '8'
+    {0x06,0x49,0x49,0x29,0x1E}, // '9'
+    {0x00,0x36,0x36,0x00,0x00}, // ':'
+    {0x00,0x56,0x36,0x00,0x00}, // ';'
+    {0x08,0x14,0x22,0x41,0x00}, // '<'
+    {0x14,0x14,0x14,0x14,0x14}, // '='
+    {0x00,0x41,0x22,0x14,0x08}, // '>'
+    {0x02,0x01,0x51,0x09,0x06}, // '?'
+    {0x32,0x49,0x79,0x41,0x3E}, // '@'
+    {0x7E,0x11,0x11,0x11,0x7E}, // 'A'
+    {0x7F,0x49,0x49,0x49,0x36}, // 'B'
+    {0x3E,0x41,0x41,0x41,0x22}, // 'C'
+    {0x7F,0x41,0x41,0x22,0x1C}, // 'D'
+    {0x7F,0x49,0x49,0x49,0x41}, // 'E'
+    {0x7F,0x09,0x09,0x09,0x01}, // 'F'
+    {0x3E,0x41,0x49,0x49,0x7A}, // 'G'
+    {0x7F,0x08,0x08,0x08,0x7F}, // 'H'
+    {0x00,0x41,0x7F,0x41,0x00}, // 'I'
+    {0x20,0x40,0x41,0x3F,0x01}, // 'J'
+    {0x7F,0x08,0x14,0x22,0x41}, // 'K'
+    {0x7F,0x40,0x40,0x40,0x40}, // 'L'
+    {0x7F,0x02,0x0C,0x02,0x7F}, // 'M'
+    {0x7F,0x04,0x08,0x10,0x7F}, // 'N'
+    {0x3E,0x41,0x41,0x41,0x3E}, // 'O'
+    {0x7F,0x09,0x09,0x09,0x06}, // 'P'
+    {0x3E,0x41,0x51,0x21,0x5E}, // 'Q'
+    {0x7F,0x09,0x19,0x29,0x46}, // 'R'
+    {0x46,0x49,0x49,0x49,0x31}, // 'S'
+    {0x01,0x01,0x7F,0x01,0x01}, // 'T'
+    {0x3F,0x40,0x40,0x40,0x3F}, // 'U'
+    {0x1F,0x20,0x40,0x20,0x1F}, // 'V'
+    {0x3F,0x40,0x38,0x40,0x3F}, // 'W'
+    {0x63,0x14,0x08,0x14,0x63}, // 'X'
+    {0x07,0x08,0x70,0x08,0x07}, // 'Y'
+    {0x61,0x51,0x49,0x45,0x43}, // 'Z'
+    {0x00,0x7F,0x41,0x41,0x00}, // '['
+    {0x02,0x04,0x08,0x10,0x20}, // '\'
+    {0x00,0x41,0x41,0x7F,0x00}, // ']'
+    {0x04,0x02,0x01,0x02,0x04}, // '^'
+    {0x40,0x40,0x40,0x40,0x40}, // '_'
+    {0x00,0x01,0x02,0x04,0x00}, // '`'
+    {0x20,0x54,0x54,0x54,0x78}, // 'a'
+    {0x7F,0x48,0x44,0x44,0x38}, // 'b'
+    {0x38,0x44,0x44,0x44,0x20}, // 'c'
+    {0x38,0x44,0x44,0x48,0x7F}, // 'd'
+    {0x38,0x54,0x54,0x54,0x18}, // 'e'
+    {0x08,0x7E,0x09,0x01,0x02}, // 'f'
+    {0x0C,0x52,0x52,0x52,0x3E}, // 'g'
+    {0x7F,0x08,0x04,0x04,0x78}, // 'h'
+    {0x00,0x44,0x7D,0x40,0x00}, // 'i'
+    {0x20,0x40,0x44,0x3D,0x00}, // 'j'
+    {0x7F,0x10,0x28,0x44,0x00}, // 'k'
+    {0x00,0x41,0x7F,0x40,0x00}, // 'l'
+    {0x7C,0x04,0x18,0x04,0x78}, // 'm'
+    {0x7C,0x08,0x04,0x04,0x78}, // 'n'
+    {0x38,0x44,0x44,0x44,0x38}, // 'o'
+    {0x7C,0x14,0x14,0x14,0x08}, // 'p'
+    {0x08,0x14,0x14,0x18,0x7C}, // 'q'
+    {0x7C,0x08,0x04,0x04,0x08}, // 'r'
+    {0x48,0x54,0x54,0x54,0x20}, // 's'
+    {0x04,0x3F,0x44,0x40,0x20}, // 't'
+    {0x3C,0x40,0x40,0x20,0x7C}, // 'u'
+    {0x1C,0x20,0x40,0x20,0x1C}, // 'v'
+    {0x3C,0x40,0x30,0x40,0x3C}, // 'w'
+    {0x44,0x28,0x10,0x28,0x44}, // 'x'
+    {0x0C,0x50,0x50,0x50,0x3C}, // 'y'
+    {0x44,0x64,0x54,0x4C,0x44}, // 'z'
+    {0x00,0x08,0x36,0x41,0x00}, // '{'
+    {0x00,0x00,0x7F,0x00,0x00}, // '|'
+    {0x00,0x41,0x36,0x08,0x00}, // '}'
+    {0x10,0x08,0x08,0x10,0x08}  // '~'
+};
+
+struct oled_dev {
+    struct i2c_client *client;
+    struct cdev cdev;
+    struct class *class;
+    dev_t devt;
+};
+
+static struct oled_dev *oled_device;
+
+// SSD1306 init commands for 128x32
+static const u8 ssd1306_init_cmds[] = {
+    0xAE,       // Display OFF
+    0xD5, 0x80, // Clock divide
+    0xA8, 0x1F, // Multiplex 32
+    0xD3, 0x00, // Display offset
+    0x40,       // Start line
+    0x8D, 0x14, // Charge pump ON
+    0x20, 0x00, // Horizontal addressing
+    0xA1,       // Segment remap
+    0xC8,       // COM scan direction
+    0xDA, 0x02, // COM pins 128x32
+    0x81, 0x7F, // Contrast
+    0xAF        // Display ON
+};
+
+// --- I2C helpers ---
+static int ssd1306_send_cmd(struct i2c_client *client, u8 cmd)
+{
+    u8 buf[2] = {0x00, cmd};
+    return i2c_master_send(client, buf, 2);
+}
+
+static int ssd1306_send_data(struct i2c_client *client, u8 data)
+{
+    u8 buf[2] = {0x40, data};
+    return i2c_master_send(client, buf, 2);
+}
+
+static int ssd1306_send_cmds(struct i2c_client *client,
+                             const u8 *cmds, int size)
+{
+    int ret, j;
+    for (j = 0; j < size; j++) {
+        ret = ssd1306_send_cmd(client, cmds[j]);
+        if (ret < 0)
+            return ret;
+        udelay(10);
+    }
+    return 0;
+}
+
+// Set cursor to page/column
+static int ssd1306_set_cursor(struct i2c_client *client, u8 page, u8 column)
+{
+    int ret;
+    ret = ssd1306_send_cmd(client, 0xB0 | (page & 0x0F));
+    if (ret < 0) return ret;
+    ret = ssd1306_send_cmd(client, 0x00 | (column & 0x0F));
+    if (ret < 0) return ret;
+    ret = ssd1306_send_cmd(client, 0x10 | ((column >> 4) & 0x0F));
+    return ret;
+}
+
+// Clear OLED
+static int ssd1306_clear_display(struct i2c_client *client)
+{
+    int i, ret;
+    ssd1306_set_cursor(client, 0, 0);
+    for (i = 0; i < SSD1306_WIDTH * (SSD1306_HEIGHT / 8); i++) {
+        ret = ssd1306_send_data(client, 0x00);
+        if (ret < 0) return ret;
+    }
+    ssd1306_set_cursor(client, 0, 0);
+    return 0;
+}
+
+// Write string to OLED
+static int ssd1306_write_string(struct i2c_client *client, const char *str)
+{
+    int ret, i, j;
+    int chars_to_write = min((int)strlen(str), MAX_CHARS);
+
+    ssd1306_set_cursor(client, 0, 0);
+
+    for (i = 0; i < chars_to_write; i++) {
+        char c = str[i];
+        if (c < 32 || c > 127)
+            c = '?';
+        for (j = 0; j < 5; j++) {
+            ret = ssd1306_send_data(client, font5x7[c - 32][j]);
+            if (ret < 0) return ret;
+        }
+        ret = ssd1306_send_data(client, 0x00); // 1px spacing
+        if (ret < 0) return ret;
+    }
+    return 0;
+}
+
+// --- Char device ---
+static ssize_t oled_write(struct file *filp,
+                          const char __user *buf,
+                          size_t count, loff_t *f_pos)
+{
+    char kbuf[128];
+    int len = min(count, sizeof(kbuf)-1);
+
+    if (copy_from_user(kbuf, buf, len))
+        return -EFAULT;
+    kbuf[len] = '\0';
+
+    ssd1306_clear_display(oled_device->client);
+    ssd1306_write_string(oled_device->client, kbuf);
+
+    return count;
+}
+
+static ssize_t oled_read(struct file *filp,
+                         char __user *buf,
+                         size_t count, loff_t *f_pos)
+{
+    const char *msg = "OLED ready\n";
+    int len = strlen(msg);
+
+    if (*f_pos >= len)
+        return 0;
+    if (count > len - *f_pos)
+        count = len - *f_pos;
+
+    if (copy_to_user(buf, msg + *f_pos, count))
+        return -EFAULT;
+
+    *f_pos += count;
+    return count;
+}
+
+static const struct file_operations oled_fops = {
+    .owner = THIS_MODULE,
+    .write = oled_write,
+    .read  = oled_read,
+};
+
+// --- I2C driver ---
+static int oled_probe(struct i2c_client *client)
+{
+    int ret;
+
+    oled_device = kzalloc(sizeof(*oled_device), GFP_KERNEL);
+    if (!oled_device)
+        return -ENOMEM;
+
+    oled_device->client = client;
+
+    ret = ssd1306_send_cmds(client, ssd1306_init_cmds,
+                            sizeof(ssd1306_init_cmds));
+    if (ret < 0)
+        goto err_free;
+
+    ssd1306_clear_display(client);
+
+    ret = alloc_chrdev_region(&oled_device->devt, 0, 1, DEVICE_NAME);
+    if (ret < 0)
+        goto err_free;
+
+    cdev_init(&oled_device->cdev, &oled_fops);
+    oled_device->cdev.owner = THIS_MODULE;
+    ret = cdev_add(&oled_device->cdev, oled_device->devt, 1);
+    if (ret < 0)
+        goto err_unregister;
+
+    oled_device->class = class_create(DEVICE_NAME);
+    if (IS_ERR(oled_device->class)) {
+        ret = PTR_ERR(oled_device->class);
+        goto err_del_cdev;
+    }
+
+    device_create(oled_device->class, NULL, oled_device->devt,
+                  NULL, DEVICE_NAME);
+
+    dev_info(&client->dev, "SSD1306 OLED initialized\n");
+    return 0;
+
+err_del_cdev:
+    cdev_del(&oled_device->cdev);
+err_unregister:
+    unregister_chrdev_region(oled_device->devt, 1);
+err_free:
+    kfree(oled_device);
+    return ret;
+}
+
+static void oled_remove(struct i2c_client *client)
+{
+    device_destroy(oled_device->class, oled_device->devt);
+    class_destroy(oled_device->class);
+    cdev_del(&oled_device->cdev);
+    unregister_chrdev_region(oled_device->devt, 1);
+    kfree(oled_device);
+    dev_info(&client->dev, "SSD1306 OLED removed\n");
+}
+
+static const struct of_device_id oled_dt_ids[] = {
+    { .compatible = "mycompany,my-i2c-oled" },
+    { }
+};
+MODULE_DEVICE_TABLE(of, oled_dt_ids);
+
+static const struct i2c_device_id oled_id[] = {
+    { "oled_char", 0 },
+    { }
+};
+MODULE_DEVICE_TABLE(i2c, oled_id);
+
+static struct i2c_driver oled_driver = {
+    .driver = {
+        .name = "oled_char",
+        .of_match_table = oled_dt_ids,
+    },
+    .probe = oled_probe,
+    .remove = oled_remove,
+    .id_table = oled_id,
+};
+
+module_i2c_driver(oled_driver);
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("SSD1306 128x32 OLED Char Device Driver");
+

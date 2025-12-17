@@ -1,0 +1,101 @@
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/fs.h>
+#include <linux/uaccess.h>
+
+#define DEVICE_NAME "calci"
+#define BUF_SIZE 16
+
+static int major;
+static char buffer[BUF_SIZE];
+static int sum = 0;
+
+// Open
+static int my_open(struct inode *inode, struct file *file){
+    printk("Device open\n");
+    return 0;
+}
+
+// Release
+static int my_release(struct inode *inode, struct file *file){
+    printk("Device close\n");
+    return 0;
+}
+
+// Read → return sum to user
+static ssize_t my_read(struct file *file, char __user *user_buf,
+                       size_t count, loff_t *ppos)
+{
+    char out[32];
+    int len;
+
+    if (*ppos > 0)
+        return 0;
+
+    len = snprintf(out, sizeof(out), "Sum = %d\n", sum);
+
+    if (copy_to_user(user_buf, out, len))
+        return -EFAULT;
+
+    *ppos = len;
+    printk("Data Read\n");
+    return len;
+}
+
+// Write → get numbers from user
+static ssize_t my_write(struct file *file, const char __user *user_buf,
+                        size_t count, loff_t *ppos)
+{
+    int a, b;
+
+    if (count > BUF_SIZE)
+        count = BUF_SIZE - 1;
+
+    if (copy_from_user(buffer, user_buf, count))
+        return -EFAULT;
+
+    buffer[count] = '\0';
+
+    // Parse two integers
+    if (sscanf(buffer, "%d %d", &a, &b) == 2) {
+        sum = a + b;
+        printk("Kernel computed %d + %d = %d\n", a, b, sum);
+    } else {
+        printk("Invalid input\n");
+    }
+
+    return count;
+}
+
+// File operations
+static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .open = my_open,
+    .release = my_release,
+    .read = my_read,
+    .write = my_write,
+};
+
+static int __init init_fun(void){
+    major = register_chrdev(0, DEVICE_NAME, &fops);
+    if (major < 0){
+        printk("Registration failed\n");
+        return major;
+    }
+
+    printk("calci driver loaded, major=%d\n", major);
+    printk("Use: mknod /dev/calci c %d 0\n", major);
+    return 0;
+}
+
+static void __exit exit_fun(void){
+    unregister_chrdev(major, DEVICE_NAME);
+    printk("calci driver unloaded\n");
+}
+
+module_init(init_fun);
+module_exit(exit_fun);
+
+MODULE_LICENSE("GPL");
+
