@@ -1,0 +1,1 @@
+Hello! This is written using the write() system call.

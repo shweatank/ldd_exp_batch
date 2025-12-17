@@ -1,0 +1,60 @@
+Your LED sysfs driver
+   |**
+   | (gpio_set_value)
+   v
+Linux GPIO subsystem
+   |
+   | (.set callback)
+   v
+BCM2835 GPIO driver
+   |
+   | writel() to GPSET0 / GPCLR0
+   v
+Memory–Mapped GPIO Registers
+   |
+   v
+Actual pin toggles → LED turns ON/OFF
+
+
+
+
+
+
+
+
++----------------------+
+          |  Userspace           |
+          |                      |
+          |  echo/cat on:        |
+          |   /sys/kernel/my_led/|
+          |     ├─ led_on        |
+          |     └─ blink_ms      |
+          +-----------+----------+
+                      |
+                      | sysfs read/write
+                      v
+          +----------------------+
+          |  my_led_sysfs.ko     |
+          |                      |
+          |  myled_init/exit     |
+          |  led_on_show/store   |
+          |  blink_ms_show/store |
+          |  delayed_work        |
+          +-----------+----------+
+                      |
+                      | gpio_request/
+                      | gpio_direction_output/
+                      | gpio_set_value()
+                      v
+          +----------------------+
+          |  GPIO subsystem      |
+          | (bcm2835-gpio etc.)  |
+          +-----------+----------+
+                      |
+                      | MMIO writes to
+                      | GPIO registers
+                      v
+          +----------------------+
+          |  Hardware GPIO pin   |
+          |  (drives LED)        |
+          +----------------------+

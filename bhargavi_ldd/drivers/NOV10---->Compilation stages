@@ -1,0 +1,49 @@
+Compilation Stages in C 
+
+****** What is compilation?
+Compilation is the process of converting human-written C code into machine-executable code through multiple steps.
+
+
+
+
+****** Stages of Compilation
+file.c
+  ↓ Preprocessor(gcc -E file.c -o file.i)
+file.i
+  ↓ Compiler(gcc -S file.i -o file.s)
+file.s
+  ↓ Assembler(gcc -c file.s -o file.o)
+file.o
+  ↓ Linker(gcc file.o -o output)
+Executable (ELF)
+  ↓ Loader
+Program runs → main()
+
+
+**********Loader (when running the executable)
+
+The Loader:
+
+Reads ELF executable
+Loads program into memory (text, data, bss)
+Loads shared libraries (libc.so.6, etc.)
+Fixes addresses & relocations
+Passes control to _start → then main()
+
+
+******Who call main()?Need execution order?
+
+OS Loader → _start → __libc_start_main() → main() → exit()
+
+
+
+
+*****single step compilation------ gcc file.c -o output
+
+
+
+
+*****Where are includes and libraries?
+
+ System header files -------> `/usr/include`        
+ Shared libraries    ------->`/lib/` , `/usr/lib/'
