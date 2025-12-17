@@ -1,1 +1,0 @@
-void printSquare(int n);
