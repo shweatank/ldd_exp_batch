@@ -9,7 +9,7 @@
         target = <&uart0>;
         __overlay__ {
             status = "okay";
-            compatible = "mycompany,my-uart0";   // <-- your driver
+            compatible = "myproject,my-uart0";   
         };
     };
 
@@ -19,7 +19,7 @@
         __overlay__ {
             myuart0_pins: myuart0_pins {
                 brcm,pins = <14 15>;
-                brcm,function = <4>;     // ALT0 = UART0
+                brcm,function = <4>;     
                 brcm,pull = <0 0>;
             };
         };

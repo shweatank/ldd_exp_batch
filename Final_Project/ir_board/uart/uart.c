@@ -39,11 +39,6 @@
 #define CR_TXE    (1 << 8)
 #define CR_RXE    (1 << 9)
 
-
-  /* UART register access macros */
-//#define uart_readl(offset)      readl(uart_dev->regs + offset)
-//#define uart_writel(val, offset) writel(val, uart_dev->regs + offset)
-
 static void __iomem *uart_base;
 static int major;
 
@@ -59,7 +54,6 @@ static int uart_release(struct inode *inode, struct file *file)
     return 0;
 }
 
-/* POLLING WRITE */
 static ssize_t uart_write(struct file *file, const char __user *buf,
                           size_t count, loff_t *offset)
 {
@@ -70,7 +64,7 @@ static ssize_t uart_write(struct file *file, const char __user *buf,
      while (i < count) {
         if (readl(uart_base + UART_FR) & FR_TXFF) {
             pr_info("rpi_uart: TX FIFO full\n");
-             if (i == 0) /* Non-blocking write */
+             if (i == 0) 
                  break;
              else
                  return i;
@@ -90,7 +84,6 @@ static ssize_t uart_write(struct file *file, const char __user *buf,
      return i;
 }
 
-/* POLLING READ */
 static ssize_t uart_read(struct file *file, char __user *buf,
                          size_t count, loff_t *offset)
 {
@@ -136,11 +129,11 @@ static void rpi_uart_hw_init(void)
      /* Disable UART */
      writel(0, uart_base + UART_CR);
  
-     /* Set baud rate to 115200 (default Pi clock settings) */
+     /* Set baud rate to 115200*/ 
      writel(26, uart_base + UART_IBRD);
      writel(3, uart_base + UART_FBRD);
  
-     /* 8-bit, FIFO disabled for simplicity */
+     /* 8-bit */
      writel((3 << 5), uart_base + UART_LCRH);
 
      writel(UART_LCRH_WLEN_8BIT | UART_LCRH_FEN, uart_base + UART_LCRH);
@@ -176,7 +169,7 @@ static void uart_remove(struct platform_device *pdev)
 }
 
 static const struct of_device_id uart_dt_ids[] = {
-    { .compatible = "mycompany,my-uart0" },  // <--- DT match
+    { .compatible = "myproject,my-uart0" },
     {}
 };
 MODULE_DEVICE_TABLE(of, uart_dt_ids);
@@ -203,10 +196,8 @@ static int __init rpi_uart_module_init(void)
 module_init(rpi_uart_module_init);
 module_exit(rpi_uart_module_exit);
 
-//module_platform_driver(uart_driver);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("You");
-MODULE_DESCRIPTION("Polling UART0 driver for Raspberry Pi 4B (BCM2711)");
+MODULE_DESCRIPTION("UART0 driver for Raspberry Pi 4B (BCM2711)");
 
 

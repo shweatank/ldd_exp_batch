@@ -5,11 +5,11 @@
 #include <string.h>
 #include <termios.h>
 
-/* IOCTL */
 #define IR_MAGIC        'i'
 #define IR_GET_STATUS   _IOR(IR_MAGIC, 0, int)
 
-#define UART_DEV "/dev/my_uart0"   // change if needed
+#define UART_DEV "/dev/my_uart0"   
+#define IR_DEV   "/dev/ir_sensor"
 
 int main(void)
 {
@@ -18,7 +18,7 @@ int main(void)
 	struct termios uart_cfg;
 
 	/* Open IR sensor device */
-	ir_fd = open("/dev/ir_sensor", O_RDWR);
+	ir_fd = open(IR_DEV, O_RDWR);
 	if (ir_fd < 0) {
 		perror("IR open");
 		return 1;
@@ -32,10 +32,7 @@ int main(void)
 		return 1;
 	}
 
-	int count = 0;
 	printf("Monitoring IR sensor...\n");
-
-
 	int prev_status = 0;
 
 	while (1) {

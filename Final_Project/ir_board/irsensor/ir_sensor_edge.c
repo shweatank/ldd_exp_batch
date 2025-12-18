@@ -20,24 +20,16 @@ static struct cdev ir_cdev;
 static struct class *ir_class;
 static struct device *ir_device;
 
-/* ================= INTERRUPT HANDLER ================= */
-
 static irqreturn_t ir_irq_handler(int irq, void *dev_id)
 {
     int value = gpio_get_value(IR_GPIO_PIN);
 
-    /*
-     * Active LOW sensor:
-     * LOW  -> object detected -> status = 1
-     * HIGH -> object removed  -> status = 0
-     */
     ir_status = (value == 0) ? 1 : 0;
 
     pr_info("Val=%d\n",ir_status);
     return IRQ_HANDLED;
 }
 
-/* ---------------- File Operations ---------------- */
 static int ir_open(struct inode *inode, struct file *file)
 {
     printk(KERN_INFO "IR SENSOR: Device opened\n");
@@ -79,7 +71,6 @@ static struct file_operations ir_fops = {
     .unlocked_ioctl = ir_ioctl,
 };
 
-/* ================= INIT / EXIT ================= */
 
 static int __init ir_driver_init(void)
 {
@@ -135,7 +126,6 @@ static int __init ir_driver_init(void)
     pr_info("IR driver loaded → /dev/ir_sensor created\n");
     return 0;
 
-/* -------- Error handling -------- */
 err_gpio:
     gpio_free(IR_GPIO_PIN);
 err_device:
@@ -164,6 +154,5 @@ module_init(ir_driver_init);
 module_exit(ir_driver_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("You");
-MODULE_DESCRIPTION("IR Sensor Edge IRQ Driver with Dynamic Device Node");
+MODULE_DESCRIPTION("IR Sensor Edge IRQ GPIO Driver");
 

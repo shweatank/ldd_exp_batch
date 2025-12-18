@@ -14,8 +14,7 @@
 #define LCD_H 220
 #define FRAME_SIZE (LCD_W * LCD_H * 2)
 
-
-/* Clear LCD by sending a black frame */
+/* Clear LCD */
 static int lcd_clear(int lcd_fd)
 {
 	unsigned char *buf = calloc(1, FRAME_SIZE);
@@ -51,7 +50,7 @@ static int lcd_show_image(int lcd_fd)
 	close(img_fd);
 
 	if (rd != FRAME_SIZE) {
-		fprintf(stderr, "Image size mismatch: %zd bytes\n", rd);
+		printf("Error: Image size mismatch: %zd bytes\n", rd);
 		free(buf);
 		return -1;
 	}
@@ -85,7 +84,7 @@ int main(void)
 
 
 	char ch;
-	char last_cmd = -1;   // force first action
+	char last_cmd = -1;   
 	int count = 0;
 
 	while (1) {
@@ -95,9 +94,8 @@ int main(void)
 			continue;
 		}
 
-		// Accept only '0' or '1'
 		if (ch != '0' && ch != '1') {
-			printf("Ignoring invalid UART data: 0x%02x\n", ch);
+			printf("Invalid data: 0x%02x\n", ch);
 			continue;
 		}
 
@@ -108,7 +106,8 @@ int main(void)
 		if (ch == '1') {
 			printf("UART='1' → Display image (%d)\n", ++count);
 			lcd_show_image(lcd_fd);
-		} else { // ch == '0'
+		} 
+		else {
 			printf("UART='0' → Clear LCD (%d)\n", ++count);
 			lcd_clear(lcd_fd);
 		}
