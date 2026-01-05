@@ -20,29 +20,29 @@ struct ili9225 {
 	struct gpio_desc *reset;
 	struct gpio_desc *dc;
 
-	u16 pw; // panel width
-	u16 ph; // panel height
+	uint16_t pw; // panel width
+	uint16_t ph; // panel height
 
-	u8 *row_buf;
+	uint8_t *row_buf;
 	size_t row_buf_size;
 
 };
 
-static inline int ili9225_write_cmd(struct ili9225 *lcd, u8 cmd)
+static inline int ili9225_write_cmd(struct ili9225 *lcd, uint8_t cmd)
 {
 	gpiod_set_value_cansleep(lcd->dc, 0); // command
 	return spi_write(lcd->spi, &cmd, 1);
 }
 
-static inline int ili9225_write_data16(struct ili9225 *lcd, u16 data)
+static inline int ili9225_write_data16(struct ili9225 *lcd, uint8_t data)
 {
-	u8 buf[2] = { data >> 8, data & 0xFF };
+	uint8_t buf[2] = { data >> 8, data & 0xFF };
 	gpiod_set_value_cansleep(lcd->dc, 1);
 	return spi_write(lcd->spi, buf, 2);
 }
 
 
-static int ili9225_write_reg(struct ili9225 *lcd, u8 reg, u16 val)
+static int ili9225_write_reg(struct ili9225 *lcd, uint8_t reg, uint16_t val)
 {
 	int ret = ili9225_write_cmd(lcd, reg);
 	if (ret)
@@ -122,7 +122,7 @@ static int ili9225_init(struct ili9225 *lcd)
 
 }
 
-static void ili9225_set_window(struct ili9225 *lcd, u16 xs, u16 ys, u16 xe, u16 ye)
+static void ili9225_set_window(struct ili9225 *lcd, uint16_t xs, uint16_t ys, uint16_t xe, uint16_t ye)
 {
 	ili9225_write_reg(lcd, 0x36, xe);
 	ili9225_write_reg(lcd, 0x37, xs);
@@ -139,18 +139,18 @@ static void ili9225_set_window(struct ili9225 *lcd, u16 xs, u16 ys, u16 xe, u16 
 
 // Display function for RGB565 frame
 
-static void ili9225_display_rgb565(struct ili9225 *lcd, u8 *frame565)
+static void ili9225_display_rgb565(struct ili9225 *lcd, uint8_t *frame565)
 {
 
-	u16 x, y;
-	u8 *row_buf = lcd->row_buf;
+	uint16_t x, y;
+	uint8_t *row_buf = lcd->row_buf;
 
 	ili9225_set_window(lcd, 0, 0, lcd->pw - 1, lcd->ph - 1);
 
 	gpiod_set_value_cansleep(lcd->dc, 1); // Data mode
 
 	for (y = 0; y < lcd->ph; y++) {
-		u8 *src = frame565 + (size_t)y * lcd->pw * 2;
+		uint8_t *src = frame565 + (size_t)y * lcd->pw * 2;
 
 		for (x = 0; x < lcd->pw; x++) {
 			row_buf[2*x]     = src[2*x + 1]; /* low byte first */
@@ -201,7 +201,7 @@ static ssize_t ili9225_write(struct file *file, const char __user *buf,size_t le
 {
 
 	struct ili9225 *lcd = spi_get_drvdata(ili9225_spi);
-	u8 *kbuf;
+	uint8_t *kbuf;
 	size_t expected_size;
 
 	if (!lcd)
@@ -258,7 +258,7 @@ static int ili9225_probe(struct spi_device *spi)
 
 	/* ensure spi speed is set (read from DT if available, otherwise force) */
 
-	u32 freq = 0;
+	int freq = 0;
 	/* prefer device-tree value if present */
 
 	if (!device_property_read_u32(&spi->dev, "spi-max-frequency", &freq)) {
