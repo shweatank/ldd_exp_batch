@@ -258,7 +258,7 @@ static int ili9225_probe(struct spi_device *spi)
 
 	/* ensure spi speed is set (read from DT if available, otherwise force) */
 
-	int freq = 0;
+	uint32_t freq = 0;
 	/* prefer device-tree value if present */
 
 	if (!device_property_read_u32(&spi->dev, "spi-max-frequency", &freq)) {
