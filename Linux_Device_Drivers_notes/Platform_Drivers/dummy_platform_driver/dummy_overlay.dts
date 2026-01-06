@@ -1,0 +1,9 @@
+/dts-v1/;
+/plugin/;
+
+&{/} { /* Targeting the root node */
+    my_dummy_device {
+        compatible = "rpi, dummy_dts"; /* This MUST match the driver */
+        status = "okay";
+    };
+};
