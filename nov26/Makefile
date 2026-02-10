@@ -1,4 +1,4 @@
-obj-m = hello_test.o
+obj-m = kmem_leak.o
 
 KDIR := /home/mirafra/practice/rasberrypi/linux
 CROSS_COMPILE = aarch64-linux-gnu-

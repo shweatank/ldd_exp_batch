@@ -164,7 +164,7 @@ static int uart_probe(struct platform_device *pdev)
     major = register_chrdev(0, DRIVER_NAME, &uart_fops);
     pr_info("my_uart0: registered char device with major %d\n", major);
 
-  rpi_uart_hw_init();
+    rpi_uart_hw_init();
       pr_info("init\n");
 
     return 0;

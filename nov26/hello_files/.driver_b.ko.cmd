@@ -1,1 +1,0 @@
-savedcmd_/home/mirafra/practice/GIT/ldd_exp_batch/nov26/hello_files/driver_b.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/mirafra/practice/GIT/ldd_exp_batch/nov26/hello_files/driver_b.ko /home/mirafra/practice/GIT/ldd_exp_batch/nov26/hello_files/driver_b.o /home/mirafra/practice/GIT/ldd_exp_batch/nov26/hello_files/driver_b.mod.o
